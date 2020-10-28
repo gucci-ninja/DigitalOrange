@@ -4,12 +4,12 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-nativ
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
 
-import Background from './components/Background';
-import InputField from './components/InputField';
-import Title from './components/Title';
-import Button from './components/Button';
+import Background from '../components/Background';
+import InputField from '../components/InputField';
+import Title from '../components/Title';
+import Button from '../components/Button';
 
-import { theme } from './core/theme';
+import { theme } from '../core/theme';
 
 export default class Signup extends React.Component {
   state = { email: '', password: '', errorMessage: null }
