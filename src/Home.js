@@ -1,7 +1,10 @@
 import React from 'react'
-import { StyleSheet, Platform, Image, Text, View } from 'react-native'
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
+
+import Background from './components/Background';
+import Paragraph from './components/Paragraph';
+import Button from './components/Button';
 
 export default class Home extends React.Component {
   state = { currentUser: null }
@@ -12,18 +15,14 @@ export default class Home extends React.Component {
   render() {
       const { currentUser } = this.state
   return (
-        <View style={styles.container}>
-          <Text>
+        <Background>
+          <Paragraph>
             Hi {currentUser && currentUser.email}!
-          </Text>
-        </View>
+          </Paragraph>
+          <Button mode="outlined" onPress={() => this.props.navigation.navigate('Login')}>
+            Logout
+          </Button>
+        </Background>
       )
   }
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})

@@ -1,7 +1,15 @@
-import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
+
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
+
+import Background from './components/Background';
+import InputField from './components/InputField';
+import Title from './components/Title';
+import Button from './components/Button';
+
+import { theme } from './core/theme';
 
 export default class Signup extends React.Component {
   state = { email: '', password: '', errorMessage: null }
@@ -14,47 +22,55 @@ export default class Signup extends React.Component {
   }
 render() {
     return (
-      <View style={styles.container}>
-        <Text>Sign Up</Text>
+      <Background>
+        <Title>Create account</Title>
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
             {this.state.errorMessage}
           </Text>}
-        <TextInput
-          placeholder="Email"
+        <InputField
+          label="Email"
+          returnKeyType="next"
           autoCapitalize="none"
-          style={styles.textInput}
+          autoCompleteType="email"
+          placeholder="Email"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
-        <TextInput
+        <InputField
           secureTextEntry
-          placeholder="Password"
+          label="Password"
           autoCapitalize="none"
-          style={styles.textInput}
+          placeholder="Password"
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
-        <Button title="Sign Up" onPress={this.handleSignUp} />
-        <Button
-          title="Already have an account? Login"
-          onPress={() => this.props.navigation.navigate('Login')}
-        />
+      <Button mode="contained" onPress={this.handleSignUp} style={styles.button}>
+        Sign Up
+      </Button>
+      <View style={styles.row}>
+        <Text style={styles.label}>Already have an account? </Text>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+          <Text style={styles.link}>Login</Text>
+        </TouchableOpacity>
       </View>
+      </Background>
     )
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+  label: {
+    color: theme.colors.secondary,
   },
-  textInput: {
-    height: 40,
-    width: '90%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8
-  }
+  button: {
+    marginTop: 24,
+  },
+  row: {
+    flexDirection: 'row',
+    marginTop: 4,
+  },
+  link: {
+    fontWeight: 'bold',
+    color: theme.colors.primary,
+  },
 })
