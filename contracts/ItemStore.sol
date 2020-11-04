@@ -1,7 +1,7 @@
-pragma solidity ^0.6.4;
+pragma solidity ^0.5.0;
 // pragma experimental ABIEncoderV2;
 
-contract TrackItem {
+contract ItemStore {
 
   struct State {
     string date;
@@ -18,25 +18,25 @@ contract TrackItem {
   }
 
   // array of items
-  mapping(uint => Item) allItems;
+  mapping(uint => Item) public allItems;
 
   // total items
-  uint256 total_items=0;
+  uint256 public total_items=0;
 
-  // emitted when a new item is added
-  event ItemAdded(uint256 index);
+  // // emitted when a new item is added
+  // event ItemAdded(uint256 index);
 
   // adding an item
-  function addItem(string memory _text) public returns (uint) {
+  function addItem(string memory text) public returns (uint) {
     Item memory newItem = Item({
       itemId: total_items,
-      name: _text,
+      name: text,
       timesTracked: 0,
       creator: msg.sender
     });
     allItems[total_items] = newItem;
     total_items = total_items + 1;
-    emit ItemAdded(total_items-1);
+    // emit ItemAdded(total_items-1);
     return (total_items - 1);
   }
 

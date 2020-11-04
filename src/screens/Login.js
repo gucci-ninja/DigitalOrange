@@ -6,7 +6,7 @@ import '@react-native-firebase/auth';
 import Title from '../components/Title';
 import Background from '../components/Background';
 import Button from '../components/Button';
-import InputField from '../components/InputField'
+import InputField from '../components/InputField';
 
 import { theme } from '../core/theme';
 

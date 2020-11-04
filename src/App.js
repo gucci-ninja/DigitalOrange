@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from "react";
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -69,7 +69,7 @@ const bottomNav = createBottomTabNavigator(
   },
 );
 
-const App = createStackNavigator(
+const AppNavigator = createStackNavigator(
   {
     Splash,
     Signup,
@@ -84,4 +84,31 @@ const App = createStackNavigator(
   }
 );
 
-export default createAppContainer(App);
+// export default createAppContainer(App);
+
+const AppContainer = createAppContainer(AppNavigator);
+
+type Props = {};
+export default class App extends Component<Props> {
+  state = { loading: true, drizzleState: null };
+
+  componentDidMount() {
+    const { drizzle } = this.props;
+
+    this.unsubscribe = drizzle.store.subscribe(() => {
+      const drizzleState = drizzle.store.getState();
+
+      if (drizzleState.drizzleStatus.initialized) {
+        this.setState({ loading: false, drizzleState });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  render() {
+    return <AppContainer screenProps={{...this.props, ...{drizzleState: this.state.drizzleState}}}/>;
+  }
+}

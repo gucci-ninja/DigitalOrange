@@ -10,6 +10,8 @@ target 'DigitalOrange' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+
   target 'DigitalOrangeTests' do
     inherit! :complete
     # Pods for testing
