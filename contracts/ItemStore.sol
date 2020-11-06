@@ -1,5 +1,5 @@
 pragma solidity ^0.5.0;
-// pragma experimental ABIEncoderV2;
+pragma experimental ABIEncoderV2;
 
 contract ItemStore {
 
@@ -21,7 +21,7 @@ contract ItemStore {
   mapping(uint => Item) public allItems;
 
   // total items
-  uint256 public total_items=0;
+  uint256 total_items=0;
 
   // // emitted when a new item is added
   // event ItemAdded(uint256 index);
@@ -40,27 +40,30 @@ contract ItemStore {
     return (total_items - 1);
   }
 
-  // update an item
-  function updateItem(uint _itemId, string memory _date, string memory _location) public returns (bool) {
-    require(_itemId <= total_items, "Invalid item id");
-    State memory newState = State({
-      date: _date,
-      location: _location,
-      editor: msg.sender
-    });
-
-    uint256 currState = allItems[_itemId].timesTracked;
-    allItems[_itemId].states[currState] = newState;
-    allItems[_itemId].timesTracked = currState + 1;
-    return true;
+  function getItem(uint index) public view returns (uint) {
+    return index+69;
   }
+  // // update an item
+  // function updateItem(uint _itemId, string memory _date, string memory _location) public returns (bool) {
+  //   require(_itemId <= total_items, "Invalid item id");
+  //   State memory newState = State({
+  //     date: _date,
+  //     location: _location,
+  //     editor: msg.sender
+  //   });
 
-  // scan an item
-  function scanItem(uint _itemId) public view returns (string memory, string memory) {
-    require(_itemId <= total_items, "Invalid item id");
-    uint256 currState = allItems[_itemId].timesTracked - 1;
-    string memory date = allItems[_itemId].states[currState].date;
-    string memory location = allItems[_itemId].states[currState].location;
-    return (date, location);
-  }
+  //   uint256 currState = allItems[_itemId].timesTracked;
+  //   allItems[_itemId].states[currState] = newState;
+  //   allItems[_itemId].timesTracked = currState + 1;
+  //   return true;
+  // }
+
+  // // scan an item
+  // function scanItem(uint _itemId) public view returns (string memory, string memory) {
+  //   require(_itemId <= total_items, "Invalid item id");
+  //   uint256 currState = allItems[_itemId].timesTracked - 1;
+  //   string memory date = allItems[_itemId].states[currState].date;
+  //   string memory location = allItems[_itemId].states[currState].location;
+  //   return (date, location);
+  // }
 }
