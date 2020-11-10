@@ -13,6 +13,10 @@ export default class NewItem extends React.Component {
   }
   state = { itemId: null, itemName: "", details: "" };
 
+  submit = () => {
+    this.addItem(this.state.itemName);
+  }
+
   addItem = async itemName => {
     const { drizzle, drizzleState } = this.props.screenProps;
     const contract = drizzle.contracts.ItemStore;
