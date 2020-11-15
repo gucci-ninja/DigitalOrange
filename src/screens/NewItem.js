@@ -1,6 +1,4 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-
 import Background from '../components/Background';
 import Title from '../components/Title';
 import Button from '../components/Button';
@@ -28,8 +26,6 @@ export default class NewItem extends React.Component {
     });
 
     const details = contract.methods["getItem"].call(1, 2);
-
-
 
     // save the itemId for later
     this.setState( { itemId, details, itemName: '' });
