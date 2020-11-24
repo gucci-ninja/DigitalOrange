@@ -35,11 +35,28 @@ export default class NewItem extends React.Component {
     const { drizzle, drizzleState } = this.props.screenProps;
     const contract = drizzle.contracts.ItemStore;
 
+    const time = this.state.time.toString();
+    const location = this.state.longitude.toString() + "," + this.state.latitude.toString();
+
     // call the newItem method
-    const itemId = await contract.methods["addItem"].cacheSend(itemName, {
+    const itemId = await contract.methods["addItem"].cacheSend(itemName, time, location, {
       from: drizzleState.accounts[0],
-      gas: 100000
+      gas: 6721975
     });
+
+    console.log(drizzle.store.getState().transactionStack);
+    // const tx = drizzle.store.getState().transactionStack[itemId]
+    // console.log(drizzle.store.getState().transactions[tx].receipt.events.ItemAdded.returnValues[0]);
+
+
+    // console.log(location);
+
+    // const updated = await contract.methods["updateItem"].cacheSend(itemId, time, location, {
+    //   from: drizzleState.accounts[0],
+    //   gas: 100000,
+    // });
+
+    // console.log(updated);
 
     // const details = contract.methods["getItem"].call(1, 2);
 
@@ -87,7 +104,25 @@ export default class NewItem extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
     };
-	};
+  };
+  
+  getItemId = () => {
+    // if (!this.props.screenProps.transactions) return null;
+    // get the transaction states from the drizzle state
+    const { transactions, transactionStack } = this.props.screenProps.drizzleState;
+    console.log(this.state.itemId);
+    // get the transaction hash using our saved `itemId`
+    const txHash = transactionStack[this.state.itemId];
+
+    // if transaction hash does not exist, don't display anything
+    if (!txHash) return null;
+
+    // otherwise, return the transaction status
+    if (transactions[txHash] && transactions[txHash].receipt)
+      return `Item ID: ${transactions[txHash].receipt.events.ItemAdded.returnValues[0]}`;
+
+    return null;
+  }
 
   render() {
     return (
@@ -103,7 +138,7 @@ export default class NewItem extends React.Component {
       <Button mode="contained" onPress={this.submit}>
         Add Item
       </Button>
-      <Title>{this.state.itemId}</Title>
+      <Title>{this.getItemId()}</Title>
       <Title>{this.state.location}</Title>
       <Title>location above</Title>
       </Background>

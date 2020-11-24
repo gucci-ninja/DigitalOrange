@@ -3,6 +3,8 @@ pragma experimental ABIEncoderV2;
 
 contract ItemStore {
 
+  event ItemAdded(uint256 index);
+  
   struct State {
     string date;
     string location;
@@ -27,36 +29,46 @@ contract ItemStore {
   // event ItemAdded(uint256 index);
 
   // adding an item
-  function addItem(string memory text) public returns (uint) {
+  function addItem(string memory text, string memory _date, string memory _location) public returns (uint) {
     Item memory newItem = Item({
       itemId: total_items,
       name: text,
-      timesTracked: 0,
+      timesTracked: 1,
       creator: msg.sender
     });
+    State memory newState = State({
+      date: _date,
+      location: _location,
+      editor: msg.sender
+    });
+
     allItems[total_items] = newItem;
+    allItems[total_items].states[0] = newState;
+
     total_items = total_items + 1;
-    // emit ItemAdded(total_items-1);
+    emit ItemAdded(total_items-1);
     return (total_items - 1);
   }
 
-  function getItem(uint index) public view returns (uint) {
-    return index+69;
-  }
-  // // update an item
-  // function updateItem(uint _itemId, string memory _date, string memory _location) public returns (bool) {
-  //   require(_itemId <= total_items, "Invalid item id");
-  //   State memory newState = State({
-  //     date: _date,
-  //     location: _location,
-  //     editor: msg.sender
-  //   });
-
-  //   uint256 currState = allItems[_itemId].timesTracked;
-  //   allItems[_itemId].states[currState] = newState;
-  //   allItems[_itemId].timesTracked = currState + 1;
-  //   return true;
+  // function getItem(uint index) public view returns (uint) {
+  //   return index+69;
   // }
+
+  // update an item
+  function updateItem(uint _itemId, string memory _date, string memory _location) public returns (uint) {
+    require(_itemId <= total_items, "Invalid item id");
+    // State memory newState = State({
+    //   date: _date,
+    //   location: _location,
+    //   editor: msg.sender
+    // });
+
+    uint256 currState = allItems[_itemId].timesTracked;
+    // allItems[_itemId].states[currState] = newState;
+    allItems[_itemId].timesTracked = currState + 1;
+    // emit Added(69);
+    return 69;
+  }
 
   // // scan an item
   // function scanItem(uint _itemId) public view returns (string memory, string memory) {
