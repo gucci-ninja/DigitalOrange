@@ -4,7 +4,9 @@ pragma experimental ABIEncoderV2;
 contract ItemStore {
 
   event ItemAdded(uint256 index);
-  
+  event StateAdded(uint256 index);
+  event Locations(string[] locations);
+
   struct State {
     string date;
     string location;
@@ -57,25 +59,33 @@ contract ItemStore {
   // update an item
   function updateItem(uint _itemId, string memory _date, string memory _location) public returns (uint) {
     require(_itemId <= total_items, "Invalid item id");
-    // State memory newState = State({
-    //   date: _date,
-    //   location: _location,
-    //   editor: msg.sender
-    // });
 
-    uint256 currState = allItems[_itemId].timesTracked;
+    State memory newState = State({
+      date: _date,
+      location: _location,
+      editor: msg.sender
+    });
+
+    allItems[_itemId].states[allItems[_itemId].timesTracked] = newState;
+    allItems[_itemId].timesTracked = allItems[_itemId].timesTracked + 1;
     // allItems[_itemId].states[currState] = newState;
-    allItems[_itemId].timesTracked = currState + 1;
-    // emit Added(69);
+    // allItems[_itemId].timesTracked = currState + 1;
+    emit StateAdded(allItems[_itemId].timesTracked - 1);
     return 69;
   }
 
-  // // scan an item
-  // function scanItem(uint _itemId) public view returns (string memory, string memory) {
-  //   require(_itemId <= total_items, "Invalid item id");
-  //   uint256 currState = allItems[_itemId].timesTracked - 1;
-  //   string memory date = allItems[_itemId].states[currState].date;
-  //   string memory location = allItems[_itemId].states[currState].location;
-  //   return (date, location);
-  // }
+  // scan an item
+  function scanItem(uint _itemId) public returns (bool) {
+    require(_itemId <= total_items, "Invalid item id");
+    string[] memory output = new string[](allItems[_itemId].timesTracked + 1);
+    for (uint256 i = 0; i < allItems[_itemId].timesTracked + 1; i++) {
+        output[i] = allItems[_itemId].states[i].location;
+    }
+    emit Locations(output);
+
+    // uint256 currState = allItems[_itemId].timesTracked - 1;
+    // string memory date = allItems[_itemId].states[currState].date;
+    // string memory location = allItems[_itemId].states[currState].location;
+    return true;
+  }
 }

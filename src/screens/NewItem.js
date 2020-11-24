@@ -45,22 +45,7 @@ export default class NewItem extends React.Component {
     });
 
     console.log(drizzle.store.getState().transactionStack);
-    // const tx = drizzle.store.getState().transactionStack[itemId]
-    // console.log(drizzle.store.getState().transactions[tx].receipt.events.ItemAdded.returnValues[0]);
 
-
-    // console.log(location);
-
-    // const updated = await contract.methods["updateItem"].cacheSend(itemId, time, location, {
-    //   from: drizzleState.accounts[0],
-    //   gas: 100000,
-    // });
-
-    // console.log(updated);
-
-    // const details = contract.methods["getItem"].call(1, 2);
-
-    // save the itemId for later
     this.setState( { itemId, itemName: '' });
   };
 
@@ -107,7 +92,7 @@ export default class NewItem extends React.Component {
   };
   
   getItemId = () => {
-    // if (!this.props.screenProps.transactions) return null;
+    if (!this.props.screenProps.transactions) return null;
     // get the transaction states from the drizzle state
     const { transactions, transactionStack } = this.props.screenProps.drizzleState;
     console.log(this.state.itemId);
