@@ -5,14 +5,17 @@ import Button from '../components/Button';
 import InputField from '../components/InputField'
 import {
   PermissionsAndroid,
-  Platform
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-
+import QRCode from 'react-native-qrcode-svg';
+import ViewShot from "react-native-view-shot";
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Share from 'react-native-share';
 export default class NewItem extends React.Component {
   constructor(props) {
     console.log(props)
     super(props);
+    this.viewShot = React.createRef();
   }
   state = { 
     itemId: null,
@@ -92,7 +95,7 @@ export default class NewItem extends React.Component {
   };
   
   getItemId = () => {
-    if (!this.props.screenProps.transactions) return null;
+    if (!this.props.screenProps) return null;
     // get the transaction states from the drizzle state
     const { transactions, transactionStack } = this.props.screenProps.drizzleState;
     console.log(this.state.itemId);
@@ -104,10 +107,21 @@ export default class NewItem extends React.Component {
 
     // otherwise, return the transaction status
     if (transactions[txHash] && transactions[txHash].receipt)
-      return `Item ID: ${transactions[txHash].receipt.events.ItemAdded.returnValues[0]}`;
+      return `${transactions[txHash].receipt.events.ItemAdded.returnValues[0]}`;
 
     return null;
   }
+
+  onSave = () => {
+    this.viewShot.current.capture().then(uri => {
+    Share.open({
+       title: "QR Code",
+       message: "Any message",
+       url: uri,
+       subject: "Code" //  for email
+     });
+    });
+   }
 
   render() {
     return (
@@ -123,9 +137,16 @@ export default class NewItem extends React.Component {
       <Button mode="contained" onPress={this.submit}>
         Add Item
       </Button>
-      <Title>{this.getItemId()}</Title>
-      <Title>{this.state.location}</Title>
-      <Title>location above</Title>
+      {this.getItemId() &&
+      <ViewShot ref={this.viewShot} options={{ width: 100, height: 100, format: "jpg", quality: 1.0 }}>
+      <TouchableOpacity onPress={this.onSave}>
+      <QRCode
+      value={this.getItemId().toString()}
+      size={300}
+      />
+       </TouchableOpacity>
+        </ViewShot>
+      }
       </Background>
     )
   }
