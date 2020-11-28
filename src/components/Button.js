@@ -5,6 +5,8 @@ import { theme } from '../core/theme';
 
 const Button = ({ mode, style, children, ...props }) => (
   <PaperButton
+    color={theme.colors.primary}
+    dark={true}
     style={[
       styles.button,
       mode === 'outlined' && { backgroundColor: theme.colors.surface },

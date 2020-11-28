@@ -95,7 +95,7 @@ export default class NewItem extends React.Component {
   };
   
   getItemId = () => {
-    if (!this.props.screenProps) return null;
+    // if (!this.props.screenProps) return null;
     // get the transaction states from the drizzle state
     const { transactions, transactionStack } = this.props.screenProps.drizzleState;
     console.log(this.state.itemId);
@@ -138,14 +138,15 @@ export default class NewItem extends React.Component {
         Add Item
       </Button>
       {this.getItemId() &&
-      <ViewShot ref={this.viewShot} options={{ width: 100, height: 100, format: "jpg", quality: 1.0 }}>
       <TouchableOpacity onPress={this.onSave}>
+      <ViewShot ref={this.viewShot} options={{ width: 100, height: 100, quality: 1.0 }}>
+
       <QRCode
       value={this.getItemId().toString()}
       size={300}
       />
-       </TouchableOpacity>
         </ViewShot>
+        </TouchableOpacity>
       }
       </Background>
     )

@@ -10,7 +10,7 @@ import Splash from './screens/Splash'
 import Signup from './screens/Signup'
 import Login from './screens/Login'
 import Home from './screens/Home'
-import Dummy from './screens/Dummy';
+import Scan from './screens/Scan';
 import NewItem from './screens/NewItem';
 
 const bottomNav = createBottomTabNavigator(
@@ -27,7 +27,7 @@ const bottomNav = createBottomTabNavigator(
     },
     // All the same stuff but for the Photo screen
     Scan: {
-      screen: Dummy,
+      screen: Scan,
       navigationOptions: {
         tabBarIcon: () => (
           <Icon name="search" size={30} color={theme.colors.primary} />
@@ -43,7 +43,7 @@ const bottomNav = createBottomTabNavigator(
       },
     },
     Profile: {
-      screen: Dummy,
+      screen: Scan,
       navigationOptions: {
         tabBarIcon: () => (
           <Icon name="person" size={30} color={theme.colors.primary} />
@@ -51,7 +51,7 @@ const bottomNav = createBottomTabNavigator(
       },
     },
     Message: {
-      screen: Dummy,
+      screen: Scan,
       navigationOptions: {
         tabBarIcon: () => (
           <Icon name="heart" size={30} color={theme.colors.primary} />
