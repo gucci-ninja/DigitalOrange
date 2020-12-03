@@ -25,7 +25,7 @@ contract ItemStore {
   mapping(uint => Item) public allItems;
 
   // total items
-  uint256 total_items=0;
+  uint256 public total_items=0;
 
   // // emitted when a new item is added
   // event ItemAdded(uint256 index);
@@ -75,7 +75,7 @@ contract ItemStore {
   }
 
   // scan an item
-  function scanItem(uint _itemId) public returns (bool) {
+  function scanItem(uint _itemId) public returns (string[] memory) {
     require(_itemId <= total_items, "Invalid item id");
     string[] memory output = new string[](allItems[_itemId].timesTracked + 1);
     for (uint256 i = 0; i < allItems[_itemId].timesTracked + 1; i++) {
@@ -86,6 +86,15 @@ contract ItemStore {
     // uint256 currState = allItems[_itemId].timesTracked - 1;
     // string memory date = allItems[_itemId].states[currState].date;
     // string memory location = allItems[_itemId].states[currState].location;
-    return true;
+    return output;
   }
+
+  // function getItems() public view returns (Item[] memory) {
+  //   Item[] memory items = new Item[](total_items);
+  //   for (uint i = 0; i < total_items; i++) {
+  //       Item storage item = allItems[i];
+  //       items[i] = item;
+  //   }
+  //   return items;
+  // }
 }
