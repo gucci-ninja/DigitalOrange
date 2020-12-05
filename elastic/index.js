@@ -28,9 +28,9 @@ const elasticsearchClient = new elasticsearch.Client({
 });
 
 // Create Items index
-function createIndex(index_name) {
+function createIndex(indexName) {
   elasticsearchClient.indices.create({  
-    index: index_name
+    index: indexName
   }, 
   function(err, resp, status) {
     if(err) {
@@ -43,16 +43,19 @@ function createIndex(index_name) {
 }
 
 // Delete index
-function deleteIndex(index_name) {
+function deleteIndex(indexName) {
   elasticsearchClient.indices.delete(
     { 
-      index: index_name
+      index: indexName
     },
     function(err, resp, status) {  
       console.log("delete",resp);
   })
 }
 
+function addDocument(itemId) {
+  
+}
 
 
 // elasticsearchClient.cluster.health({},function(err,resp,status) {  
@@ -66,7 +69,7 @@ async function getBlock() {
 
 
 // setContract();
-deleteIndex('example2')
+// deleteIndex('example2')
 
 // put example3
 // {
