@@ -1,11 +1,31 @@
 var elasticsearch = require('elasticsearch');
 
-
 var Web3 = require("web3");
 var ItemStore = require("../build/contracts/ItemStore.json");
 const NODE_ADDRESS = `http://127.0.0.1:8545`;
 const web3 = new Web3(new Web3.providers.HttpProvider(NODE_ADDRESS));
 
+const itemBody = {
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "keyword"
+      },
+      "timesTracked": {
+        "type": "integer"
+      },
+      "creator": {
+        "type": "keyword"
+      },
+      "locations": {
+        "type": "geo_shape"
+      },
+      "timestamps": {
+        "type": "date"
+      }
+    }
+  }
+}
 
 async function setContract() {
     addr=(await web3.eth.getAccounts())[0]
@@ -30,7 +50,8 @@ const elasticsearchClient = new elasticsearch.Client({
 // Create Items index
 function createIndex(indexName) {
   elasticsearchClient.indices.create({  
-    index: indexName
+    index: indexName,
+    body: itemBody
   }, 
   function(err, resp, status) {
     if(err) {
@@ -53,8 +74,15 @@ function deleteIndex(indexName) {
   })
 }
 
-function addDocument(itemId) {
-  
+function addDocument(indexName, itemId, docBody) {
+  elasticsearchClient.index({  
+    index: indexName,
+    id: itemId,
+    type: '_doc',
+    body: docBody
+  },function(err,resp,status) {
+      console.log(resp);
+  });
 }
 
 
@@ -69,7 +97,16 @@ async function getBlock() {
 
 
 // setContract();
-// deleteIndex('example2')
+// deleteIndex('item')
+createIndex('item')
+addDocument('item', '1', {
+  "name": "crabs",
+  "locations": { 
+    "coordinates": [ [-80.12, 43.34], [-60.8264672, 49.129836], [-29.10, 79.123]], 
+    "type": "linestring" 
+  }  
+}
+)
 
 // put example3
 // {
@@ -83,10 +120,3 @@ async function getBlock() {
 //   }
 
 // put example3/_doc/4
-// {
-//   "name": "granola",
-//   "location": { 
-//     "coordinates": [ [-79.12, 43.34], [-60.8264672, 49.129836], [-29.10, 79.123]], 
-//     "type": "linestring" 
-//   }  
-// }
