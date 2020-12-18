@@ -7,16 +7,16 @@ const web3 = new Web3(new Web3.providers.HttpProvider(ETH_CLIENT_ADDRESS));
 
 
 async function setContract() {
-    addr=(await web3.eth.getAccounts())[0]
-    console.log(addr);
-    const networkId = await web3.eth.net.getId()
-    const deployedAddress = ItemStore.networks[networkId].address
-    var ItemContract = new web3.eth.Contract(ItemStore.abi, deployedAddress);
-    //ItemContract.methods.addItem("grapes", "12345", "-69,69").send({from:addr, gas: 6721975});
-    // out = await ItemContract.methods.getItems().call().send({from:addr, gas: 6721975});
-    const out = await ItemContract.methods.scanItem(0).call()
-    //const out = await ItemContract.methods.total_items.call().call()
-    console.log(out);
+  addr=(await web3.eth.getAccounts())[0]
+  console.log(addr);
+  const networkId = await web3.eth.net.getId()
+  const deployedAddress = ItemStore.networks[networkId].address
+  var ItemContract = new web3.eth.Contract(ItemStore.abi, deployedAddress);
+  //ItemContract.methods.addItem("grapes", "12345", "-69,69").send({from:addr, gas: 6721975});
+  // out = await ItemContract.methods.getItems().call().send({from:addr, gas: 6721975});
+  const out = await ItemContract.methods.scanItem(0).call()
+  //const out = await ItemContract.methods.total_items.call().call()
+  console.log(out);
 }
 
 
