@@ -6,6 +6,7 @@ contract ItemStore {
   event ItemAdded(uint256 index);
   event StateAdded(uint256 index);
   event Locations(string[] locations);
+  event Dates(string[] dates);
 
   struct State {
     string date;
@@ -26,6 +27,7 @@ contract ItemStore {
 
   // total items
   uint256 public total_items=0;
+  uint256 public last_updated=0;
 
   // // emitted when a new item is added
   // event ItemAdded(uint256 index);
@@ -46,6 +48,7 @@ contract ItemStore {
 
     allItems[total_items] = newItem;
     allItems[total_items].states[0] = newState;
+    last_updated = total_items;
 
     total_items = total_items + 1;
     emit ItemAdded(total_items-1);
@@ -70,18 +73,33 @@ contract ItemStore {
     allItems[_itemId].timesTracked = allItems[_itemId].timesTracked + 1;
     // allItems[_itemId].states[currState] = newState;
     // allItems[_itemId].timesTracked = currState + 1;
+    last_updated = _itemId;
     emit StateAdded(allItems[_itemId].timesTracked - 1);
     return 69;
   }
 
   // scan an item
-  function scanItem(uint _itemId) public returns (string[] memory) {
+  function getLocations(uint _itemId) public returns (string[] memory) {
     require(_itemId <= total_items, "Invalid item id");
-    string[] memory output = new string[](allItems[_itemId].timesTracked + 1);
-    for (uint256 i = 0; i < allItems[_itemId].timesTracked + 1; i++) {
+    string[] memory output = new string[](allItems[_itemId].timesTracked);
+    for (uint256 i = 0; i < allItems[_itemId].timesTracked; i++) {
         output[i] = allItems[_itemId].states[i].location;
     }
     emit Locations(output);
+
+    // uint256 currState = allItems[_itemId].timesTracked - 1;
+    // string memory date = allItems[_itemId].states[currState].date;
+    // string memory location = allItems[_itemId].states[currState].location;
+    return output;
+  }
+
+  function getDates(uint _itemId) public returns (string[] memory) {
+    require(_itemId <= total_items, "Invalid item id");
+    string[] memory output = new string[](allItems[_itemId].timesTracked);
+    for (uint256 i = 0; i < allItems[_itemId].timesTracked; i++) {
+        output[i] = allItems[_itemId].states[i].date;
+    }
+    emit Dates(output);
 
     // uint256 currState = allItems[_itemId].timesTracked - 1;
     // string memory date = allItems[_itemId].states[currState].date;
