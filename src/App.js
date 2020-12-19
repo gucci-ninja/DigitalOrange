@@ -12,6 +12,7 @@ import Login from './screens/Login'
 import Home from './screens/Home'
 import Scan from './screens/Scan';
 import NewItem from './screens/NewItem';
+import History from './screens/History';
 
 const bottomNav = createBottomTabNavigator(
   {
@@ -37,16 +38,17 @@ const bottomNav = createBottomTabNavigator(
     Add: {
       screen: NewItem,
       navigationOptions: {
+        unmountOnBlur: true,
         tabBarIcon: () => (
           <Icon name="add-circle" size={30} color={theme.colors.primary} />
         ),
       },
     },
-    Profile: {
-      screen: Scan,
+    History: {
+      screen: History,
       navigationOptions: {
         tabBarIcon: () => (
-          <Icon name="person" size={30} color={theme.colors.primary} />
+          <Icon name="list-outline" size={30} color={theme.colors.primary} />
         ),
       },
     },
@@ -81,6 +83,7 @@ const AppNavigator = createStackNavigator(
   {
     initialRouteName: 'Splash',
     headerMode: 'none',
+    detachPreviousScreen: true
   }
 );
 
