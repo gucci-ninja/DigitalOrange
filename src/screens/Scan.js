@@ -11,6 +11,7 @@ import {
 import Background from '../components/Background';
 import Title from '../components/Title';
 import Geolocation from 'react-native-geolocation-service';
+import { Snackbar } from 'react-native-paper';
 
 
 export default class Scan extends React.Component {
@@ -31,23 +32,23 @@ export default class Scan extends React.Component {
 
   onSuccess = async (e) => {
     const itemId = parseInt(e.data);
-    console.log(e.data);
+
     this.setState( { itemId });
     const { drizzle, drizzleState } = this.props.screenProps;
     const contract = drizzle.contracts.ItemStore;
 
     const time = this.state.time.toString();
-    const location = this.state.longitude.toString() + "," + this.state.latitude.toString();
+    //const location = this.state.longitude.toString() + "," + this.state.latitude.toString();
+    const location = "-84.617760,42.682435"
 
     // call the newItem method
-    const stackId = await contract.methods["updateItem"].cacheSend(itemId, location, time, {
+    const stackId = await contract.methods["updateItem"].cacheSend(itemId, time, location, {
       from: drizzleState.accounts[0],
       gas: 6721975
     });
 
     this.setState( { updated: true });
 
-    console.log(drizzle.store.getState().transactionStack);
   }
 
   getCoordinates = async () => {
@@ -55,7 +56,7 @@ export default class Scan extends React.Component {
     if (hasLocationPermission) {
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
+
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
           const time = position.timestamp;
@@ -70,6 +71,7 @@ export default class Scan extends React.Component {
       );
     };
   };
+  
 
   checkPerms = async () => {
     const hasPermission = await PermissionsAndroid.check(
@@ -93,6 +95,9 @@ export default class Scan extends React.Component {
   }
 
   render() {
+
+    const onDismissSnackBar = () => this.setState({ updated: false});
+
     return (
       <Background>
         <Title>Scan an item</Title>
@@ -101,7 +106,17 @@ export default class Scan extends React.Component {
         reactivateTimeout={3000}
         onRead={this.onSuccess.bind(this)}
       />
-      { this.state.updated && <Title>Item Updated</Title>}
+      <Snackbar
+        visible={this.state.updated}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'View',
+          onPress: () => {
+            this.props.navigation.navigate('History', {itemId: this.state.itemId})
+          },
+        }}>
+        Item Updated!
+      </Snackbar>
       </Background>
     );
   }
