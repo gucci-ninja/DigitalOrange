@@ -5,8 +5,7 @@ contract ItemStore {
 
   event ItemAdded(uint256 index);
   event StateAdded(uint256 index);
-  event Locations(string[] locations);
-  event Dates(string[] dates);
+  event History(string[] arr);
 
   struct State {
     string date;
@@ -85,7 +84,7 @@ contract ItemStore {
     for (uint256 i = 0; i < allItems[_itemId].timesTracked; i++) {
         output[i] = allItems[_itemId].states[i].location;
     }
-    emit Locations(output);
+    emit History(output);
 
     // uint256 currState = allItems[_itemId].timesTracked - 1;
     // string memory date = allItems[_itemId].states[currState].date;
@@ -99,7 +98,7 @@ contract ItemStore {
     for (uint256 i = 0; i < allItems[_itemId].timesTracked; i++) {
         output[i] = allItems[_itemId].states[i].date;
     }
-    emit Dates(output);
+    emit History(output);
 
     // uint256 currState = allItems[_itemId].timesTracked - 1;
     // string memory date = allItems[_itemId].states[currState].date;
