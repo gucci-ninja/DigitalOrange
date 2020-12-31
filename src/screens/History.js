@@ -119,7 +119,9 @@ class History extends React.Component {
 
     // otherwise, return the transaction status
     if (transactions[locationHash] && transactions[locationHash].receipt && transactions[dateHash] && transactions[dateHash].receipt){
-      return `${transactions[locationHash].receipt.events.History.returnValues.arr.slice(1)},${transactions[dateHash].receipt.events.History.returnValues.arr.slice(1)}`;
+      const locations = transactions[locationHash].receipt.events.History.returnValues.arr.slice(1);
+      const dates = transactions[dateHash].receipt.events.History.returnValues.arr.slice(1);
+      return dates.map((date, i) => ({ 'time': date, 'title': locations[i] }));
     }
     return [];
   }
@@ -139,7 +141,7 @@ class History extends React.Component {
         <Title>Details for: {this.getEventResponse()}</Title>
         <Timeline 
           style={styles.list}
-          data={this.data}
+          data={this.getEventResponse()}
           circleSize={20}
           circleColor='rgb(45,156,219)'
           lineColor='rgb(45,156,219)'
