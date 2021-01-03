@@ -106,8 +106,10 @@ class History extends React.Component {
   }
 
   getEventResponse = () => {
-    if (!this.state.locationStackId) return [];
+    // console.log(this.props.screenProps.drizzle.store.getState().transactionStack)
+    if (!this.state.locationStackId ||!this.state.dateStackId) return [];
     const { transactions, transactionStack } = this.props.screenProps.drizzleState;
+
 
     // get the transaction hash usisng stack id
     const locationHash = transactionStack[this.state.locationStackId];
@@ -117,6 +119,7 @@ class History extends React.Component {
     // if transaction hash does not exist, don't display anything
     if (!locationHash || !dateHash) return [];
 
+    console.log('hash data');
     // otherwise, return the transaction status
     if (transactions[locationHash] && transactions[locationHash].receipt && transactions[dateHash] && transactions[dateHash].receipt){
       const locations = transactions[locationHash].receipt.events.History.returnValues.arr.slice(1);
@@ -138,7 +141,7 @@ class History extends React.Component {
           onWillBlur={payload => console.log('will blur',payload)}
           onDidBlur={payload => console.log('did blur',payload)}
         />
-        <Title>Details for: {this.getEventResponse()}</Title>
+        <Title>Details for: item name</Title>
         <Timeline 
           style={styles.list}
           data={this.getEventResponse()}
