@@ -24,12 +24,8 @@ contract ItemStore {
   // array of items
   mapping(uint => Item) public allItems;
 
-  // total items
   uint256 public total_items=0;
   uint256 public last_updated=0;
-
-  // // emitted when a new item is added
-  // event ItemAdded(uint256 index);
 
   // adding an item
   function addItem(string memory text, string memory _date, string memory _location) public returns (uint) {
@@ -54,11 +50,7 @@ contract ItemStore {
     return (total_items - 1);
   }
 
-  // function getItem(uint index) public view returns (uint) {
-  //   return index+69;
-  // }
-
-  // update an item
+  // add state to an item
   function updateItem(uint _itemId, string memory _date, string memory _location) public returns (uint) {
     require(_itemId <= total_items, "Invalid item id");
 
@@ -70,14 +62,12 @@ contract ItemStore {
 
     allItems[_itemId].states[allItems[_itemId].timesTracked] = newState;
     allItems[_itemId].timesTracked = allItems[_itemId].timesTracked + 1;
-    // allItems[_itemId].states[currState] = newState;
-    // allItems[_itemId].timesTracked = currState + 1;
     last_updated = _itemId;
     emit StateAdded(allItems[_itemId].timesTracked - 1);
     return 69;
   }
 
-  // scan an item
+  // retrieves all locations 
   function getLocations(uint _itemId) public returns (string[] memory) {
     require(_itemId <= total_items, "Invalid item id");
     string[] memory output = new string[](allItems[_itemId].timesTracked);
@@ -85,13 +75,10 @@ contract ItemStore {
         output[i] = allItems[_itemId].states[i].location;
     }
     emit History(output);
-
-    // uint256 currState = allItems[_itemId].timesTracked - 1;
-    // string memory date = allItems[_itemId].states[currState].date;
-    // string memory location = allItems[_itemId].states[currState].location;
     return output;
   }
 
+  // retrieves all timestamps
   function getDates(uint _itemId) public returns (string[] memory) {
     require(_itemId <= total_items, "Invalid item id");
     string[] memory output = new string[](allItems[_itemId].timesTracked);
@@ -99,19 +86,6 @@ contract ItemStore {
         output[i] = allItems[_itemId].states[i].date;
     }
     emit History(output);
-
-    // uint256 currState = allItems[_itemId].timesTracked - 1;
-    // string memory date = allItems[_itemId].states[currState].date;
-    // string memory location = allItems[_itemId].states[currState].location;
     return output;
   }
-
-  // function getItems() public view returns (Item[] memory) {
-  //   Item[] memory items = new Item[](total_items);
-  //   for (uint i = 0; i < total_items; i++) {
-  //       Item storage item = allItems[i];
-  //       items[i] = item;
-  //   }
-  //   return items;
-  // }
 }
