@@ -5,24 +5,41 @@ const ETH_CLIENT_ADDRESS = `http://127.0.0.1:8545`;
 
 const web3 = new Web3(new Web3.providers.HttpProvider(ETH_CLIENT_ADDRESS));
 
+var addr;
+var ItemContract;
 
-async function setContract() {
+module.exports.setContract = async function() {
   addr=(await web3.eth.getAccounts())[0]
-  console.log(addr);
   const networkId = await web3.eth.net.getId()
   const deployedAddress = ItemStore.networks[networkId].address
-  var ItemContract = new web3.eth.Contract(ItemStore.abi, deployedAddress);
+  ItemContract = new web3.eth.Contract(ItemStore.abi, deployedAddress);
   //ItemContract.methods.addItem("grapes", "12345", "-69,69").send({from:addr, gas: 6721975});
   // out = await ItemContract.methods.getItems().call().send({from:addr, gas: 6721975});
-  const out = await ItemContract.methods.scanItem(0).call()
+  // const out = await ItemContract.methods.scanItem(0).call()
   //const out = await ItemContract.methods.total_items.call().call()
-  console.log(out);
 }
 
+async function getLastUpdatedItem() {
+  const lastUpdated = await ItemContract.methods.last_updated.call().call()
+  const item = await ItemContract.methods.allItems(lastUpdated).call();
+  const locations = await ItemContract.methods.getLocations(lastUpdated).call();
+  const timestamps = await ItemContract.methods.getDates(lastUpdated).call();
+  return {
+    itemId: item.itemId,
+    name: item.name,
+    timesTracked: item.timesTracked,
+    creator: item.creator,
+    "location": {
+      "coordinates": locations.map(location => location.split(",").map(x=>parseFloat(x))),
+      "type": "linestring"
+    },
+    "timestamps": timestamps.map(time => parseInt(time))
+  }
+}
 
-async function getLastBlockNumber() {
+module.exports.getLastBlockNumber = async function () {
   const block =  await web3.eth.getBlockNumber();
-  console.log(block);
+  return block
 }
 
 async function getBlock(blockId) {
@@ -50,40 +67,22 @@ function decode(input) {
 }
 
 function processTransaction(transaction, date) {
-  const decoded = decode(transaction.input);
-  console.log(web3.utils.toAscii(transaction.input));
-  console.log(web3.getPastEvents("allEvents", {fromBlock: 67, toBlock: 68}));
-	const overrides = {
+  // console.log(web3.utils.toAscii(transaction.input))
+  const item = getLastUpdatedItem();
+  const overrides = {
+    item,
 		date,
 		coin: "ETH",
 		coinName: "Ether",
-		decodedInput: decoded,
 		sender: transaction.from,
 		value: normalizeNumber(transaction.value, 18),
 		gasPrice: normalizeNumber(transaction.gasPrice, 9)
 	};
 
-	if (decoded && decoded.method.name.startsWith("transfer")) {
-		const token = TOKENS.get(transaction.to) || {
-			symbol: "<UNK>",
-			name: "Unknown",
-			decimals: 18
-		};
-
-		overrides.coin = token.symbol;
-		overrides.coinName = token.name;
-		overrides.to = decoded.params.to;
-		overrides.value = normalizeNumber(decoded.params.value, token.decimals);
-
-		if (decoded.method.name.startsWith("transferFrom(")) {
-			overrides.from = decoded.params.from;
-		}
-	}
-
 	return Object.assign({}, transaction, overrides);
 }
 
-async function processBlock(block) {
+module.exports.processBlock = async function (block) {
 	if (typeof block === "number") {
 		block = await getBlock(block);
 	}
@@ -94,8 +93,7 @@ async function processBlock(block) {
 
 	console.log(`\tcontaining ${ originalTransactions.length } transactions`);
 
-	return originalTransactions.map(transaction => processTransaction(transaction, date));
+  if (originalTransactions.length === 0) return []
+  const item = await getLastUpdatedItem();
+  return item
 }
-
-
-processBlock(67)
