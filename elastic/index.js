@@ -60,22 +60,6 @@ async function postTransactions(transaction) {
     return;
   }
   addDocument('item', transaction.itemId, transaction)
-
-  // const t = await ethClient.get
-  // Get 
-	// const bulkBody = transactions
-	// 	.map(createBulkEntry)
-	// 	.reduce((a, b) => a.concat(b), []);
-
-	// elasticsearchClient.bulk({
-	// 	body: bulkBody
-	// }, (err, resp) => {
-	// 	if (err) {
-	// 		console.log("\terror sending bulk: ", err);
-	// 	} else {
-	// 		console.log("\tbulk sent successfully");
-	// 	}
-	// });
 }
 
 async function iterateBlocks(current, end) {
@@ -96,7 +80,7 @@ async function iterateBlocks(current, end) {
 }
 
 async function main() {
-  // createIndex('item') 
+  // createIndex('item') // create index unless it is already created
   await ethClient.setContract();
 	let resolvePromise;
 	const promise = new Promise(resolve => {
@@ -122,17 +106,3 @@ async function main() {
 }
 
 main().then(() => console.log("Your blockchain is fully synced!"));
-
-
-// setContract();
-// deleteIndex('item')
-// createIndex('item')
-// addDocument('item', '1', {
-//   "name": "crabs",
-//   "locations": { 
-//     "coordinates": [ [-80.12, 43.34], [-60.8264672, 49.129836], [-29.10, 79.123]], 
-//     "type": "linestring" 
-//   }  
-// }
-// )
-
