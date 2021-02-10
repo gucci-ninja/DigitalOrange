@@ -3,9 +3,7 @@ import Background from '../components/Background';
 import Title from '../components/Title';
 import Button from '../components/Button';
 import InputField from '../components/InputField'
-import {
-  PermissionsAndroid,
-} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import QRCode from 'react-native-qrcode-svg';
 import ViewShot from "react-native-view-shot";
@@ -13,21 +11,21 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Share from 'react-native-share';
 export default class NewItem extends React.Component {
   constructor(props) {
-    console.log(props)
     super(props);
     this.viewShot = React.createRef();
+    this.getCoordinates();
   }
   state = { 
     itemId: null,
-    itemName: "",
-    details: "",
+    itemName: '',
+    details: '',
     longitude: '',
     latitude: '',
     time: ''
   };
 
   componentDidMount() {
-    this.getCoordinates(); //
+    this.getCoordinates();
   }
 
   submit = () => {
@@ -47,7 +45,6 @@ export default class NewItem extends React.Component {
       gas: 6721975
     });
 
-    console.log(drizzle.store.getState().transactionStack);
 
     this.setState( { itemId, itemName: '' });
   };
@@ -78,7 +75,6 @@ export default class NewItem extends React.Component {
     if (hasLocationPermission) {
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
           const time = position.timestamp;
@@ -86,7 +82,6 @@ export default class NewItem extends React.Component {
           
         },
         (error) => {
-          // See error code charts below.
           console.log(error.code, error.message);
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -95,10 +90,9 @@ export default class NewItem extends React.Component {
   };
   
   getItemId = () => {
-    // if (!this.props.screenProps) return null;
     // get the transaction states from the drizzle state
     const { transactions, transactionStack } = this.props.screenProps.drizzleState;
-    console.log(this.state.itemId);
+
     // get the transaction hash using our saved `itemId`
     const txHash = transactionStack[this.state.itemId];
 
