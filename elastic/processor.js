@@ -47,7 +47,7 @@ module.exports.processBlock = async function (block) {
 	if (typeof block === "number") {
 		block = await getBlock(block);
 	}
-	console.log(`analizying block #${ block.number }`);
+	console.log(`analyzing block #${ block.number }`);
 
 	const originalTransactions = block.transactions;
 
