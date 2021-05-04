@@ -6,7 +6,7 @@
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyA5jeBf8Vnhuim01nqCBWW6jdXNf26Q8c8"/>
+               android:value="[if you saw this then no you didn't - the key is expired anyways >:)]"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
